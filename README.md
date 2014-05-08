@@ -1,0 +1,4 @@
+socketCliente
+=============
+
+Codificação do cliente
