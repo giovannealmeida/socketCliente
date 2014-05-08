@@ -80,5 +80,9 @@ class JanelaPrincipal extends JFrame implements ActionListener {
         if (e.getSource() == btnSearch) {
             
         }
+        
+        if (e.getSource() == btnConnect) {
+            
+        }
     }
 }
