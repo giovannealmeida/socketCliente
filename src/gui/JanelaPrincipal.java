@@ -1,5 +1,6 @@
 package gui;
 
+import cliente.Cliente;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -24,6 +25,8 @@ class JanelaPrincipal extends JFrame implements ActionListener {
     private final int altura = 600;
     private final int largura = 600;
 
+    private Cliente cliente = new Cliente();
+    
     private JButton btnConnect;
     private JButton btnSearch;
     private JTextField txtSearch;
@@ -78,7 +81,7 @@ class JanelaPrincipal extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
-            
+            cliente.conectar();
         }
         
         if (e.getSource() == btnConnect) {

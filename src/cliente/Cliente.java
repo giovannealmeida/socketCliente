@@ -11,7 +11,7 @@ import java.net.Socket;
  * @author Giovanne
  */
 public class Cliente {
-    
+
     public void conectar() {
         String arquivo;
         String arquivoResposta;
@@ -27,13 +27,15 @@ public class Cliente {
 
             System.out.println("Digite a entrada: ");
             arquivo = entrada.readLine();
+            System.out.println("Enviando requisição para o servidor...");
             paraServidor.writeBytes(arquivo + "\n");
-//        arquivoResposta = doServidor.readLine();
-//        System.out.println("Resposta: "+arquivoResposta);
+            System.out.println("Recebendo requisição do servidor...");
+            arquivoResposta = doServidor.readLine();
+            System.out.println("Resposta: " + arquivoResposta);
+            paraServidor.close();
             socketCliente.close();
         } catch (IOException e) {
             System.out.println("Falha na conexão com o servidor!");
-            return;
         }
     }
 }
