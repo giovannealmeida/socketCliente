@@ -5,37 +5,43 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Giovanne
  */
+
 public class Cliente {
 
-    public void conectar() {
-        String arquivo;
-        String arquivoResposta;
-        Socket socketCliente = null;
+    private Socket socketCliente = null;
+    private BufferedReader doServidor = null;
+    DataOutputStream paraServidor = null;
+    public String arquivoResposta;
+    public boolean isConnected;
+    public boolean isServerOn;
 
-        BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
-
+    public boolean sendRequest(String arquivo) {
         try {
             socketCliente = new Socket("localhost", 6789);
 
-            DataOutputStream paraServidor = new DataOutputStream(socketCliente.getOutputStream());
-            BufferedReader doServidor = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
-
-            System.out.println("Digite a entrada: ");
-            arquivo = entrada.readLine();
-            System.out.println("Enviando requisição para o servidor...");
+            paraServidor = new DataOutputStream(socketCliente.getOutputStream());
+            doServidor = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
             paraServidor.writeBytes(arquivo + "\n");
-            System.out.println("Recebendo requisição do servidor...");
             arquivoResposta = doServidor.readLine();
             System.out.println("Resposta: " + arquivoResposta);
-            paraServidor.close();
-            socketCliente.close();
-        } catch (IOException e) {
-            System.out.println("Falha na conexão com o servidor!");
+        } catch (IOException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        
+        try {
+            paraServidor.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return true;
     }
 }

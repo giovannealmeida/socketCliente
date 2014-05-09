@@ -2,15 +2,18 @@ package gui;
 
 import cliente.Cliente;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -24,10 +27,11 @@ class JanelaPrincipal extends JFrame implements ActionListener {
 
     private final int altura = 600;
     private final int largura = 600;
-
-    private Cliente cliente = new Cliente();
     
-    private JButton btnConnect;
+    private final Cliente cliente = new Cliente();
+
+    private JButton btnUpdate;
+    
     private JButton btnSearch;
     private JTextField txtSearch;
     private JTable tbTable;
@@ -36,36 +40,32 @@ class JanelaPrincipal extends JFrame implements ActionListener {
 
     private JPanel panel = new JPanel(null);
     private JPanel statusPanel = new JPanel();
-    private JLabel statusLabel = new JLabel("Desconectado");
+    private JLabel statusLabel = new JLabel("Status");
 
     public JanelaPrincipal() {
 
-        btnConnect = new JButton("Conectar");
-//        btnConnect.setBorder(BorderFactory.createEmptyBorder());
-//        btnConnect.setContentAreaFilled(false);
-//        btnConnect.setOpaque(false);
-        btnConnect.addActionListener(this);
-        btnConnect.setBounds(10, 10, 100, 30);
-        
+        btnUpdate = new JButton("Atualizar");
+        btnUpdate.addActionListener(this);
+        btnUpdate.setBounds(10, 10, 100, 30);
+
         btnSearch = new JButton("Buscar");
         btnSearch.addActionListener(this);
         btnSearch.setBounds(320, 50, 100, 30);
-        
+
         txtSearch = new JTextField();
         txtSearch.setBounds(10, 50, 300, 30);
-//        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        
+
         tbTable = new JTable(3, 5);
-        tbTable.setBounds(10,100,570,300);
+        tbTable.setBounds(10, 100, 570, 300);
         statusPanel.add(statusLabel);
         statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         statusPanel.setPreferredSize(new Dimension(this.getWidth(), 30));
-        
-        panel.add(btnConnect);
+
+        panel.add(btnUpdate);
         panel.add(btnSearch);
         panel.add(txtSearch);
         panel.add(tbTable);
-        
+
         this.setLayout(new BorderLayout());
         this.add(panel);
         this.add(statusPanel, BorderLayout.SOUTH);
@@ -81,11 +81,13 @@ class JanelaPrincipal extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
-            cliente.conectar();
+            if (!cliente.sendRequest(txtSearch.getText())) {
+                JOptionPane.showMessageDialog(rootPane, "Servidor não encontrado");
+            }
         }
-        
-        if (e.getSource() == btnConnect) {
-            
+
+        if (e.getSource() == btnUpdate) {
+
         }
     }
 }
