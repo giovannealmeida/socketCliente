@@ -30,7 +30,7 @@ public class Cliente {
             doServidor = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
             paraServidor.writeBytes(arquivo + "\n");
             arquivoResposta = doServidor.readLine();
-            System.out.println("Resposta: " + arquivoResposta);
+            System.out.println("Resposta do servidor: " + arquivoResposta);
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             return false;
