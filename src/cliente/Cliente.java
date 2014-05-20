@@ -49,9 +49,8 @@ public class Cliente {
 
             byte[] cbuffer = new byte[1024];
             int bytesRead = 0;
-
             System.out.println("Lendo resposta...");
-            while ((bytesRead = is.read(cbuffer)) != -1) {
+            while (((bytesRead = is.read(cbuffer)) != -1)) {
                 fos.write(cbuffer, 0, bytesRead);
                 fos.flush();
             }
