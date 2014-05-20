@@ -35,7 +35,10 @@ public class Cliente {
             is = socketCliente.getInputStream();
             
             System.out.println("Criando OutputStream...");
-            fos = new FileOutputStream(new File("c:\\temp\\do-servidor.txt"));
+            File solicitado = new File(arquivo);
+            String[] parts = solicitado.getAbsolutePath().split("\\\\");
+            fos = new FileOutputStream(new File("c:\\temp\\"+parts[parts.length-1]));
+            System.out.println("Salvando \""+parts[parts.length-1]+"\"");
             
             System.out.println("Criando bufferedReader...");
             doServidor = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
@@ -45,7 +48,7 @@ public class Cliente {
             paraServidor.writeBytes(arquivo + "\n");
 
             byte[] cbuffer = new byte[1024];
-            int bytesRead;
+            int bytesRead = 0;
 
             System.out.println("Lendo resposta...");
             while ((bytesRead = is.read(cbuffer)) != -1) {
