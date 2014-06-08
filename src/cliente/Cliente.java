@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -34,40 +35,41 @@ public class Cliente {
             System.out.println("Criando InputStream...");
             is = socketCliente.getInputStream();
             
+            System.out.println("Criando dataOutputStream...");
+            paraServidor = new DataOutputStream(socketCliente.getOutputStream());
+            System.out.println("Enviando solicitação...");
+            paraServidor.writeBytes(arquivo + "\n");
+            
+            byte[] flagBuffer = new byte[1];
+            byte[] cbuffer = new byte[1024];
+            int bytesRead = 0;
+            System.out.println("Lendo flag...");
+            int flag = is.read(flagBuffer);
+            System.out.println("Flag: "+flag);
+            
+            if(flag == -1){
+                JOptionPane.showMessageDialog(null,"Arquivo não encontrado!");
+                return true;
+            }
+            //Cria arquivo
             System.out.println("Criando OutputStream...");
             File solicitado = new File(arquivo);
             String[] parts = solicitado.getAbsolutePath().split("\\\\");
             fos = new FileOutputStream(new File("c:\\temp\\"+parts[parts.length-1]));
             System.out.println("Salvando \""+parts[parts.length-1]+"\"");
             
-            System.out.println("Criando bufferedReader...");
-            doServidor = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
-            System.out.println("Criando dataOutputStream...");
-            paraServidor = new DataOutputStream(socketCliente.getOutputStream());
-            System.out.println("Enviando solicitação...");
-            paraServidor.writeBytes(arquivo + "\n");
-
-            byte[] cbuffer = new byte[1024];
-            int bytesRead = 0;
             System.out.println("Lendo resposta...");
             while (((bytesRead = is.read(cbuffer)) != -1)) {
                 fos.write(cbuffer, 0, bytesRead);
                 fos.flush();
             }
             System.out.println("Reposta recebida!");
-//            socketCliente = new Socket("localhost", 6789);
-//            paraServidor = new DataOutputStream(socketCliente.getOutputStream());
-//            doServidor = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
-//            paraServidor.writeBytes(arquivo + "\n");
-//            arquivoResposta = doServidor.readLine();
-//            System.out.println("Resposta: " + arquivoResposta);
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
 
         try {
-            //paraServidor.close();
             socketCliente.close();
             fos.close();
             is.close();

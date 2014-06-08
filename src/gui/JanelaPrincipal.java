@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
@@ -23,27 +22,21 @@ import javax.swing.border.BevelBorder;
 class JanelaPrincipal extends JFrame implements ActionListener {
 
     private final int altura = 600;
-    private final int largura = 600;
-    
+    private final int largura = 300;
+
     private final Cliente cliente = new Cliente();
 
-    private JButton btnUpdate;
-    
     private JButton btnSearch;
     private JTextField txtSearch;
-    private JTable tbTable;
+
     private ImageIcon imgStart;
     private ImageIcon imgStop;
 
     private JPanel panel = new JPanel(null);
     private JPanel statusPanel = new JPanel();
-    private JLabel statusLabel = new JLabel("Status");
+    private JLabel statusLabel = new JLabel("Status: Desconectado");
 
     public JanelaPrincipal() {
-
-        btnUpdate = new JButton("Atualizar");
-        btnUpdate.addActionListener(this);
-        btnUpdate.setBounds(10, 10, 100, 30);
 
         btnSearch = new JButton("Buscar");
         btnSearch.addActionListener(this);
@@ -52,16 +45,12 @@ class JanelaPrincipal extends JFrame implements ActionListener {
         txtSearch = new JTextField();
         txtSearch.setBounds(10, 50, 300, 30);
 
-        tbTable = new JTable(3, 5);
-        tbTable.setBounds(10, 100, 570, 300);
         statusPanel.add(statusLabel);
         statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         statusPanel.setPreferredSize(new Dimension(this.getWidth(), 30));
 
-        panel.add(btnUpdate);
         panel.add(btnSearch);
         panel.add(txtSearch);
-        panel.add(tbTable);
 
         this.setLayout(new BorderLayout());
         this.add(panel);
@@ -79,12 +68,11 @@ class JanelaPrincipal extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
             if (!cliente.sendRequest(txtSearch.getText())) {
-                JOptionPane.showMessageDialog(rootPane, "Servidor não encontrado");
+                statusLabel.setText("Status: Desconectado");
+                JOptionPane.showMessageDialog(rootPane, "Servidor não responde");
+                return;
             }
-        }
-
-        if (e.getSource() == btnUpdate) {
-
+            statusLabel.setText("Status: Conectado");
         }
     }
 }
